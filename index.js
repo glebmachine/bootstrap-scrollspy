@@ -33,7 +33,7 @@
       this.$scrollElement = this.$element.on('scroll.bs.scroll-spy.data-api', process)
       this.options        = $.extend({}, ScrollSpy.DEFAULTS, options)
       this.selector       = (this.options.target
-        || ((href = $(element).attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '')) //strip for ie7
+        || ((href = $(element).attr('href').replace(/^\/#/,'#')) && href.replace(/.*(?=#[^\s]+$)/, '')) //strip for ie7
         || '') + ' .nav li > a'
       this.offsets        = $([])
       this.targets        = $([])
@@ -58,8 +58,9 @@
         .find(this.selector)
         .map(function () {
           var $el   = $(this)
-          var href  = $el.data('target') || $el.attr('href')
+          var href  = $el.data('target') || $el.attr('href').replace(/^\/#/,'#')
           var $href = /^#\w/.test(href) && $(href)
+
   
           return ($href
             && $href.length
@@ -101,8 +102,8 @@
         .removeClass('active')
   
       var selector = this.selector
-        + '[data-target="' + target + '"],'
-        + this.selector + '[href="' + target + '"]'
+        + '[data-target*="' + target + '"], '
+        + this.selector + '[href*="' + target + '"]'
   
       var active = $(selector)
         .parents('li')
